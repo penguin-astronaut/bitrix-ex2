@@ -1,5 +1,6 @@
 <?php
 /** @var array $arResult */
+/** @var CBitrixComponentTemplate $this */
 
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 ?>
@@ -29,3 +30,10 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
     <br>
 <?php endforeach;?>
 </ul>
+
+<?php $this->SetViewTarget("price_block");?>
+<div style="color:red; margin: 34px 15px 35px 15px">
+    <p>Максимальная цена: <?=$arResult["PRODUCT_MAX_PRICE"]?></p>
+    <p>Минимальная цена: <?=$arResult["PRODUCT_MIN_PRICE"]?></p>
+</div>
+<?php $this->EndViewTarget();?>

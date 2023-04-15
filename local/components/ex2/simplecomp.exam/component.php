@@ -47,8 +47,16 @@ if ($this->StartResultCache()) {
         ["NAME", "ID", "IBLOCK_SECTION_ID", "PROPERTY_ARTNUMBER", "PROPERTY_MATERIAL", "PROPERTY_PRICE"],
     );
     $arProducts = [];
+    $arResult["PRODUCT_MIN_PRICE"] = 0;
+    $arResult["PRODUCT_MAX_PRICE"] = 0;
     while ($curProduct = $products->Fetch()) {
         $arProducts[$curProduct["ID"]] = $curProduct;
+        if (!$arResult["PRODUCT_MIN_PRICE"] || $curProduct["PROPERTY_PRICE_VALUE"] < $arResult["PRODUCT_MIN_PRICE"]) {
+            $arResult["PRODUCT_MIN_PRICE"] = $curProduct["PROPERTY_PRICE_VALUE"];
+        }
+        if ($curProduct["PROPERTY_PRICE_VALUE"] > $arResult["PRODUCT_MAX_PRICE"]) {
+            $arResult["PRODUCT_MAX_PRICE"] = $curProduct["PROPERTY_PRICE_VALUE"];
+        }
     }
 
     foreach ($arProducts as $arProduct) {
