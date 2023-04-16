@@ -7,7 +7,7 @@ $arComponentDescription = array(
     "NAME" => Loc::getMessage("SIMPLECOMP_EXAM2_NAME"),
     "DESCRIPTION" => Loc::getMessage("SIMPLECOMP_EXAM2_DESCR"),
     "PATH" => array(
-        "ID" => "ex2",
+        "ID" => "exam2",
         "NAME" => Loc::getMessage("SIMPLECOMP_EXAM2_PATH")
     ),
 );
