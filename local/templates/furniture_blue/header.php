@@ -10,6 +10,7 @@ IncludeTemplateLangFile(__FILE__);
 <link href="<?=SITE_TEMPLATE_PATH?>/common.css" type="text/css" rel="stylesheet" />
 <link href="<?=SITE_TEMPLATE_PATH?>/colors.css" type="text/css" rel="stylesheet" />
 
+	<link rel="canonical" href="<?=$APPLICATION->ShowProperty("canonical")?>">
 	<!--[if lte IE 6]>
 	<style type="text/css">
 		
@@ -26,6 +27,7 @@ IncludeTemplateLangFile(__FILE__);
 	</style>
 	<![endif]-->
 	<title><?$APPLICATION->ShowTitle()?></title>
+
 </head>
 <body>
 	<div id="page-wrapper">
