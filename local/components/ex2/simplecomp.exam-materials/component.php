@@ -25,9 +25,14 @@ if (!$USER->IsAuthorized()) {
     $this->includeComponentTemplate();
 }
 
-$arUser = CUser::GetByID($USER->GetID())->Fetch();
+$arParams["NEWS_IBLOCK_ID"] = $arParams["NEWS_IBLOCK_ID"] ?: 1;
+$arParams["AUTHOR_PROPERTY_CODE"] = $arParams["AUTHOR_PROPERTY_CODE"] ?: "AUTHOR";
+$arParams["AUTHOR_TYPE_PROPERTY_CODE"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: "UF_AUTHOR_TYPE";
+$arParams["CACHE_TIME"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: 36000000;
 
 if ($this->StartResultCache()) {
+    $arUser = CUser::GetByID($USER->GetID())->Fetch();
+
     $authorFilter = [
         $arParams["AUTHOR_TYPE_PROPERTY_CODE"] => $arUser[$arParams["AUTHOR_TYPE_PROPERTY_CODE"]],
     ];
