@@ -15,7 +15,7 @@ if (!Loader::includeModule("iblock")) {
 
 $arParams["ID_IBLOCK_CATALOG"] = $arParams["ID_IBLOCK_CATALOG"] ?: 2;
 $arParams["ID_IBLOCK_NEWS"] = $arParams["ID_IBLOCK_NEWS"] ?: 1;
-$arParams["UF_NEWS_LINK"] = $arParams["ID_IBLOCK_NEWS"] ?: "UF_NEWS_LINK";
+$arParams["PROPERTY_CODE"] = $arParams["PROPERTY_CODE"] ?: "UF_NEWS_LINK";
 
 if ($this->StartResultCache()) {
     $news = CIBlockElement::GetList(
