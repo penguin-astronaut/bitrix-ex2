@@ -23,12 +23,25 @@ if (!Loader::includeModule("iblock")) {
 
 if (!$USER->IsAuthorized()) {
     $this->includeComponentTemplate();
+    return;
 }
 
 $arParams["NEWS_IBLOCK_ID"] = $arParams["NEWS_IBLOCK_ID"] ?: 1;
 $arParams["AUTHOR_PROPERTY_CODE"] = $arParams["AUTHOR_PROPERTY_CODE"] ?: "AUTHOR";
 $arParams["AUTHOR_TYPE_PROPERTY_CODE"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: "UF_AUTHOR_TYPE";
 $arParams["CACHE_TIME"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: 36000000;
+
+$newsIBlock = CIBlock::GetByID($arParams["NEWS_IBLOCK_ID"]);
+if ($arNewsIBlock = $newsIBlock->Fetch()) {
+    $this->AddIncludeAreaIcon(
+        [
+            "URL" => "/bitrix/admin/iblock_element_admin.php?IBLOCK_ID={$arNewsIBlock["ID"]}" .
+                "&type={$arNewsIBlock["IBLOCK_TYPE_ID"]}",
+            "TITLE" => "ИБ в админке",
+            "IN_PARAMS_MENU" => true
+        ]
+    );
+}
 
 if ($this->StartResultCache()) {
     $arUser = CUser::GetByID($USER->GetID())->Fetch();
@@ -68,6 +81,10 @@ if ($this->StartResultCache()) {
             $arResult["ITEMS"][$author["ID"]]["AUTHOR"] = $author;
             $arResult["ITEMS"][$author["ID"]]["NEWS"][$arNew["NEWS"]["ID"]] = $arNew["NEWS"];
         }
+    }
+
+    if ($APPLICATION->GetShowIncludeAreas()) {
+        $APPLICATION->AddPanelButtonMenu("TEST_ID", [""]);
     }
 
     $this->includeComponentTemplate();
