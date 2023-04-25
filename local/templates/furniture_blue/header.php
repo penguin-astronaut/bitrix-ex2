@@ -124,7 +124,16 @@ $APPLICATION->IncludeFile(
 ?>
 					</div>
 				</div>
-				
+				<div class="content-block">
+					<?$APPLICATION->IncludeComponent("bitrix:main.site.selector", "site_change", Array(
+						"CACHE_TIME" => "360000000",	// Cache time (sec.)
+						"CACHE_TYPE" => "A",	// Cache type
+						"SITE_LIST" => "",	// Sites List
+						"COMPONENT_TEMPLATE" => "dropdown"
+					),
+						false
+					);?>
+				</div>
 				<div class="content-block">
 					<div class="content-block-inner">
 						
