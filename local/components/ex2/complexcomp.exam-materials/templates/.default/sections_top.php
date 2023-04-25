@@ -13,8 +13,9 @@
 $this->setFrameMode(true);
 ?>
 <?php
-//ссылка на страницу станицу exampage 
-$url = str_replace(["#PARAM1#", "#PARAM2#"], [123, 456], $arResult["URL_TEMPLATES"]["exampage"])
+//ссылка на страницу станицу exampage
+
+$url = $arResult['FOLDER'] . str_replace(["#PARAM1#", "#PARAM2#"], [123, 456], $arResult["URL_TEMPLATES"]["exampage"])
 ?>
 <?=GetMessage("EXAM_TEXT_LINK_CP_PHOTO")?> <a href="<?=$url?>"><?=$url?></a>
 
