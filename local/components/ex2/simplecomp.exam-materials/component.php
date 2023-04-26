@@ -43,7 +43,7 @@ if ($arNewsIBlock = $newsIBlock->Fetch()) {
     );
 }
 
-if ($this->StartResultCache()) {
+if ($this->StartResultCache(false, $USER->GetID())) {
     $arUser = CUser::GetByID($USER->GetID())->Fetch();
 
     $authorFilter = [
