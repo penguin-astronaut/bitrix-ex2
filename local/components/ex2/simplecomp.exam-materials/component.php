@@ -83,9 +83,5 @@ if ($this->StartResultCache(false, $USER->GetID())) {
         }
     }
 
-    if ($APPLICATION->GetShowIncludeAreas()) {
-        $APPLICATION->AddPanelButtonMenu("TEST_ID", [""]);
-    }
-
     $this->includeComponentTemplate();
 }
