@@ -11,9 +11,12 @@ if (!(int)$arParams["ID_IBLOCK_CANONICAL"]) {
     return;
 }
 
+$cp = $this->__component;
+
 $arFilter = ['IBLOCK_ID' => $arParams["ID_IBLOCK_CANONICAL"], "PROPERTY_NEWS" => $arParams["ELEMENT_ID"]];
 $elements = CIBlockElement::GetList(false, $arFilter);
 
 if ($element = $elements->Fetch()) {
-    $APPLICATION->SetPageProperty("canonical", $element["NAME"]);
+    $arResult["CANONICAL"] = $element["NAME"];
+    $cp->setResultCacheKeys(["CANONICAL"]);
 }

@@ -13,7 +13,6 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 use Bitrix\Main\Loader,
-	Bitrix\Iblock,
     Bitrix\Main\Localization\Loc;
 
 if (!Loader::includeModule("iblock")) {
@@ -29,7 +28,7 @@ if (!$USER->IsAuthorized()) {
 $arParams["NEWS_IBLOCK_ID"] = $arParams["NEWS_IBLOCK_ID"] ?: 1;
 $arParams["AUTHOR_PROPERTY_CODE"] = $arParams["AUTHOR_PROPERTY_CODE"] ?: "AUTHOR";
 $arParams["AUTHOR_TYPE_PROPERTY_CODE"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: "UF_AUTHOR_TYPE";
-$arParams["CACHE_TIME"] = $arParams["AUTHOR_TYPE_PROPERTY_CODE"] ?: 36000000;
+$arParams["CACHE_TIME"] = $arParams["CACHE_TIME"] ?: 36000000;
 
 $newsIBlock = CIBlock::GetByID($arParams["NEWS_IBLOCK_ID"]);
 if ($arNewsIBlock = $newsIBlock->Fetch()) {
@@ -85,3 +84,5 @@ if ($this->StartResultCache(false, $USER->GetID())) {
 
     $this->includeComponentTemplate();
 }
+
+$APPLICATION->SetTitle(Loc::getMessage("SIMPLECOMP_EXAM2_CAT_TITLE") . " - {$arResult["TOTAL_NEWS_CNT"]}");
