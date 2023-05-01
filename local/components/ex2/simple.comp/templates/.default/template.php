@@ -31,4 +31,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
         </ul>
     <?php endforeach;?>
 </ul>
-
+<div>
+    <?=$arResult["NAV_STRING"]?>
+</div>

@@ -28,6 +28,11 @@ $arComponentParameters = [
             "NAME" => Loc::getMessage("EX2_SIMP_COMP_PRODUCT_TO_CLASSIFIER_CODE"),
             "TYPE" => "STRING",
         ],
+        "CLASSIFIER_PAGE_COUNT" => [
+            "PARENT" => "BASE",
+            "NAME" => Loc::getMessage("EX2_SIMP_COMP_CLASSIFIER_PAGE_COUNT"),
+            "TYPE" => "STRING",
+        ],
         "CACHE_TIME" => Array("DEFAULT"=>30000000),
     ],
 ];

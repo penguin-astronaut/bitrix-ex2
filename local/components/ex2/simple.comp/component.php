@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Context;
+use Bitrix\Main\Localization\Loc;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
@@ -22,15 +23,24 @@ $arParams["IBLOCK_ID_PRODUCTS"] = $arParams["IBLOCK_ID_PRODUCTS"] ?: 2;
 $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"] = $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"] ?: 7;
 $arParams["PRODUCT_URL_TEMPLATE"] = $arParams["PRODUCT_URL_TEMPLATE"] ?: 'catalog_exam/#SECTION_ID#/#ELEMENT_CODE#';
 $arParams["PRODUCT_TO_CLASSIFIER_CODE"] = $arParams["PRODUCT_TO_CLASSIFIER_CODE"] ?: 'COMPANIES';
+$arParams["CLASSIFIER_PAGE_COUNT"] = (int)$arParams["CLASSIFIER_PAGE_COUNT"] ?: 2;
 
 $request = Context::getCurrent()->getRequest();
 $isUseFilter = (bool)$request->get("F");
-if ($isUseFilter || $this->startResultCache(false, $USER->GetGroups())) {
+
+$arNavParams = [
+    "nPageSize" => $arParams["CLASSIFIER_PAGE_COUNT"],
+    "bShowAll" => false,
+];
+$arNavigation = CDBResult::GetNavParams($arParams["CLASSIFIER_PAGE_COUNT"]);
+
+if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavigation])) {
     //классификаторы
     $arClassifiersFilter = ["IBLOCK_ID" => $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"], "CHECK_PERMISSIONS" => "Y"];
     $arClassifiersFields = ["ID", "NAME"];
     $classifiersQ =
-        CIBlockElement::GetList(false, $arClassifiersFilter, false, false, $arClassifiersFields);
+        CIBlockElement::GetList(false, $arClassifiersFilter, false, $arNavParams, $arClassifiersFields);
+    $arResult["NAV_STRING"] = $classifiersQ->GetPageNavString(Loc::getMessage("EX2_SIMP_PAGINATION_TITLE"));
 
     $catalog = [];
     while ($classifierItem = $classifiersQ->Fetch()) {
@@ -82,6 +92,7 @@ if ($isUseFilter || $this->startResultCache(false, $USER->GetGroups())) {
     }
     $arResult["TOTAL_CNT"] = count($catalog);
     $arResult["ITEMS"] = $catalog;
+
     $this->includeComponentTemplate();
 }
 
