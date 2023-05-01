@@ -19,7 +19,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                     <?=$product["PROPERTY_PRICE_VALUE"]?> -
                     <?=$product["PROPERTY_MATERIAL_VALUE"]?> -
                     <?=$product["PROPERTY_ARTNUMBER_VALUE"]?>
-                    <a href="<?=$product['DETAIL_PAGE_URL']?>">ссылка</a>
+                    <span><?=$product['DETAIL_PAGE_URL']?></span>
                 </li>
             <?php endforeach;?>
         </ul>

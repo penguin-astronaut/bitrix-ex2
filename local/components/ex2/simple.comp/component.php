@@ -17,7 +17,7 @@ global $USER;
 $arParams["CACHE_TIME"] = $arParams["CACHE_TIME"] ?? 300;
 $arParams["IBLOCK_ID_PRODUCTS"] = $arParams["IBLOCK_ID_PRODUCTS"] ?: 2;
 $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"] = $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"] ?: 7;
-$arParams["PRODUCT_URL_TEMPLATE"] = $arParams["PRODUCT_URL_TEMPLATE"] ?: 'test';
+$arParams["PRODUCT_URL_TEMPLATE"] = $arParams["PRODUCT_URL_TEMPLATE"] ?: 'catalog_exam/#SECTION_ID#/#ELEMENT_CODE#';
 $arParams["PRODUCT_TO_CLASSIFIER_CODE"] = $arParams["PRODUCT_TO_CLASSIFIER_CODE"] ?: 'COMPANIES';
 
 if ($this->startResultCache(false, $USER->GetGroups())) {
@@ -33,6 +33,7 @@ if ($this->startResultCache(false, $USER->GetGroups())) {
     }
 
     // продукция
+    $arProductsOrder = ["name" => "asc", "sort" => "asc"];
     $propName = "PROPERTY_{$arParams["PRODUCT_TO_CLASSIFIER_CODE"]}";
     $arProductsFilter = [
         "IBLOCK_ID" => $arParams["IBLOCK_ID_PRODUCTS"],
@@ -40,12 +41,17 @@ if ($this->startResultCache(false, $USER->GetGroups())) {
         $propName => array_keys($catalog)
     ];
     $arProductsFields =
-        ["ID", "NAME", "PROPERTY_COMPANIES", "PROPERTY_PRICE", "PROPERTY_ARTNUMBER", "PROPERTY_MATERIAL", "DETAIL_PAGE_URL"];
+        ["ID", "NAME", "PROPERTY_COMPANIES", "PROPERTY_PRICE", "PROPERTY_ARTNUMBER", "PROPERTY_MATERIAL", "CODE", "IBLOCK_ID", "IBLOCK_SECTION_ID"];
     $productsQ =
-        CIBlockElement::GetList(false, $arProductsFilter, false, false, $arProductsFields);
+        CIBlockElement::GetList($arProductsOrder, $arProductsFilter, false, false, $arProductsFields);
 
     // формирование результируещего массива
-    while($product = $productsQ->GetNext()) {
+    while($product = $productsQ->Fetch()) {
+        $product["DETAIL_PAGE_URL"] = str_replace(
+            ["#SECTION_ID#", "#ELEMENT_CODE#"],
+            [$product["IBLOCK_SECTION_ID"], $product["CODE"]],
+            $arParams["PRODUCT_URL_TEMPLATE"]
+        );
         $catalog[$product["PROPERTY_COMPANIES_VALUE"]]["products"][] = $product;
     }
     $arResult["TOTAL_CNT"] = count($catalog);

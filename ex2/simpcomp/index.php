@@ -10,7 +10,7 @@ $APPLICATION->SetTitle("Простой компонент");
 		"IBLOCK_ID_PRODUCTS" => "2",
 		"IBLOCK_ID_PRODUCTS_CLASSIFIER" => "7",
 		"PRODUCT_TO_CLASSIFIER_CODE" => "COMPANIES",
-		"PRODUCT_URL_TEMPLATE" => "/test/",
+		"PRODUCT_URL_TEMPLATE" => "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
 		"COMPONENT_TEMPLATE" => ".default"
 	),
 	false
