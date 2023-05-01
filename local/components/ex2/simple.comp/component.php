@@ -54,6 +54,7 @@ if ($isUseFilter || $this->startResultCache(false, $USER->GetGroups())) {
                 ["<PROPERTY_RADIUS" => 1500, "=PROPERTY_MATERIAL" => "Металл, пластик"],
             ],
         ];
+        $this->abortResultCache();
     }
 
     $arProductsFields =
