@@ -7,7 +7,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 ?>
 
 ---
-
+<p><a href="/ex2/simpcomp/?F=Y">/ex2/simpcomp/?F=Y</a></p>
 <h3>Каталог</h3>
 <ul>
     <?php foreach ($arResult["ITEMS"] as $classifier):?>

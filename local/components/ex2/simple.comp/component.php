@@ -1,4 +1,7 @@
 <?php
+
+use Bitrix\Main\Context;
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
@@ -20,7 +23,9 @@ $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"] = $arParams["IBLOCK_ID_PRODUCTS_CLASS
 $arParams["PRODUCT_URL_TEMPLATE"] = $arParams["PRODUCT_URL_TEMPLATE"] ?: 'catalog_exam/#SECTION_ID#/#ELEMENT_CODE#';
 $arParams["PRODUCT_TO_CLASSIFIER_CODE"] = $arParams["PRODUCT_TO_CLASSIFIER_CODE"] ?: 'COMPANIES';
 
-if ($this->startResultCache(false, $USER->GetGroups())) {
+$request = Context::getCurrent()->getRequest();
+$isUseFilter = (bool)$request->get("F");
+if ($isUseFilter || $this->startResultCache(false, $USER->GetGroups())) {
     //классификаторы
     $arClassifiersFilter = ["IBLOCK_ID" => $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"], "CHECK_PERMISSIONS" => "Y"];
     $arClassifiersFields = ["ID", "NAME"];
@@ -40,6 +45,17 @@ if ($this->startResultCache(false, $USER->GetGroups())) {
         "CHECK_PERMISSIONS" => "Y",
         $propName => array_keys($catalog)
     ];
+
+    if ($isUseFilter) {
+        $arProductsFilter += [
+            [
+                "LOGIC" => "OR",
+                ["<=PROPERTY_PRICE" => 1700, "=PROPERTY_MATERIAL" => "Дерево, ткань"],
+                ["<PROPERTY_RADIUS" => 1500, "=PROPERTY_MATERIAL" => "Металл, пластик"],
+            ],
+        ];
+    }
+
     $arProductsFields =
         ["ID", "NAME", "PROPERTY_COMPANIES", "PROPERTY_PRICE", "PROPERTY_ARTNUMBER", "PROPERTY_MATERIAL", "CODE", "IBLOCK_ID", "IBLOCK_SECTION_ID"];
     $productsQ =
