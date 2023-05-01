@@ -14,12 +14,17 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
         <li><b><?=$classifier["name"]?></b></li>
         <ul>
             <?php foreach ($classifier["products"] as $product):?>
-                <li>
+                <?php
+                $id = "{$classifier["name"]}-{$product['ID']}";
+                $this->AddEditAction($id, $product['EDIT_LINK'], CIBlock::GetArrayByID($product["IBLOCK_ID"], "ELEMENT_EDIT"));
+                $this->AddDeleteAction($id, $product['DELETE_LINK'], CIBlock::GetArrayByID($product["IBLOCK_ID"], "ELEMENT_DELETE"), ["CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')]);
+                ?>
+                <li id="<?=$this->GetEditAreaId($id);?>">
                     <?=$product["NAME"]?> -
                     <?=$product["PROPERTY_PRICE_VALUE"]?> -
                     <?=$product["PROPERTY_MATERIAL_VALUE"]?> -
                     <?=$product["PROPERTY_ARTNUMBER_VALUE"]?>
-                    <span><?=$product['DETAIL_PAGE_URL']?></span>
+                    <span><?=$product['DETAIL_PAGE_URL_CUSTOM']?></span>
                 </li>
             <?php endforeach;?>
         </ul>

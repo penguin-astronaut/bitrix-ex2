@@ -61,13 +61,22 @@ if ($isUseFilter || $this->startResultCache(false, $USER->GetGroups())) {
     $productsQ =
         CIBlockElement::GetList($arProductsOrder, $arProductsFilter, false, false, $arProductsFields);
 
+    $addedIds = [];
     // формирование результируещего массива
-    while($product = $productsQ->Fetch()) {
-        $product["DETAIL_PAGE_URL"] = str_replace(
+    while($product = $productsQ->GetNext()) {
+        $product["DETAIL_PAGE_URL_CUSTOM"] = str_replace(
             ["#SECTION_ID#", "#ELEMENT_CODE#"],
             [$product["IBLOCK_SECTION_ID"], $product["CODE"]],
             $arParams["PRODUCT_URL_TEMPLATE"]
         );
+        $arButtons = CIBlock::GetPanelButtons(
+            $product["IBLOCK_ID"],
+            $product ["ID"],
+            0,
+            ["SECTION_BUTTONS" => false, "SESSID" => false]
+        );
+        $product["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+        $product["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
         $catalog[$product["PROPERTY_COMPANIES_VALUE"]]["products"][] = $product;
     }
     $arResult["TOTAL_CNT"] = count($catalog);
