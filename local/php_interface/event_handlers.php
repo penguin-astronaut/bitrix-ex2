@@ -1,13 +1,14 @@
 <?php
 
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", ["MyClass", "onBeforeElementUpdate"]);
+AddEventHandler("iblock", "OnAfterIBlockElementUpdate", ["MyClass", "onAfterElementUpdate"]);
 AddEventHandler("main", "OnEpilog", ["MyClass", "onEpilog"]);
 
 class MyClass
 {
     public static function onBeforeElementUpdate(&$arParams)
     {
-        if ($arParams["ACTIVE"] === "N") {
+        if ($arParams["IBLOCK_ID"] === 2 && $arParams["ACTIVE"] === "N") {
             $elem = CIBlockElement::GetByID($arParams["ID"])->Fetch();
             if ($elem["ACTIVE"] === "Y" && (int)$elem["SHOW_COUNTER"] > 2) {
                 global $APPLICATION;
@@ -16,6 +17,14 @@ class MyClass
                 );
                 return false;
             }
+        }
+    }
+
+    public static function onAfterElementUpdate(&$arParams)
+    {
+        if ($arParams["IBLOCK_ID"] === '3') {
+
+            CBitrixComponent::clearComponentCache('ex2:simple.comp');
         }
     }
 

@@ -5,7 +5,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 ?>
-
+---
+<p>Метка времени: <?=time()?></p>
 ---
 <p><a href="/ex2/simpcomp/?F=Y">/ex2/simpcomp/?F=Y</a></p>
 <h3>Каталог</h3>
