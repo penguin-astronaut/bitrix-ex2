@@ -1,11 +1,11 @@
 <?php
 
-function countUsersRegisterForPeriod(): ?string
+function CheckUserCount(): ?string
 {
     $lastTimeStart = COption::GetOptionInt("main", "countUsersRegisterForPeriod_time");
     if (!$lastTimeStart) {
         COption::SetOptionInt("main", "countUsersRegisterForPeriod_time", time());
-        return "countUsersRegisterForPeriod();";
+        return "CheckUserCount();";
     }
 
     $newUsers = CUser::GetList(false, false, ["DATE_REGISTER_1" => date("d.m.Y", $lastTimeStart)]);
@@ -28,5 +28,5 @@ function countUsersRegisterForPeriod(): ?string
         ]
     );
     COption::SetOptionInt("main", "countUsersRegisterForPeriod_time", time());
-    return "countUsersRegisterForPeriod();";
+    return "CheckUserCount();";
 }
