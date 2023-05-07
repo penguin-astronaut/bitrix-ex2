@@ -10,6 +10,7 @@ IncludeTemplateLangFile(__FILE__);
 <link href="<?=SITE_TEMPLATE_PATH?>/common.css" type="text/css" rel="stylesheet" />
 <link href="<?=SITE_TEMPLATE_PATH?>/colors.css" type="text/css" rel="stylesheet" />
 
+	<link rel="canonical" href="<?=$APPLICATION->ShowProperty("canonical")?>">
 	<!--[if lte IE 6]>
 	<style type="text/css">
 		
@@ -26,6 +27,7 @@ IncludeTemplateLangFile(__FILE__);
 	</style>
 	<![endif]-->
 	<title><?$APPLICATION->ShowTitle()?></title>
+
 </head>
 <body>
 	<div id="page-wrapper">
@@ -122,7 +124,16 @@ $APPLICATION->IncludeFile(
 ?>
 					</div>
 				</div>
-				
+				<div class="content-block">
+					<?$APPLICATION->IncludeComponent("bitrix:main.site.selector", "site_change", Array(
+						"CACHE_TIME" => "360000000",	// Cache time (sec.)
+						"CACHE_TYPE" => "A",	// Cache type
+						"SITE_LIST" => "",	// Sites List
+						"COMPONENT_TEMPLATE" => "dropdown"
+					),
+						false
+					);?>
+				</div>
 				<div class="content-block">
 					<div class="content-block-inner">
 						
