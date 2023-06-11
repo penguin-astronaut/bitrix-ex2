@@ -1,36 +1,42 @@
 <?php
+
 /** @var array $arResult */
+
+use Bitrix\Main\Localization\Loc;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
+
+
+
 ?>
 ---
-<p>Метка времени: <?=time()?></p>
+<p><?= Loc::getMessage("SIMP_COMP_TEMPLATE_TIMESTAMP") ?> <?= time() ?></p>
 ---
 <p><a href="/ex2/simpcomp/?F=Y">/ex2/simpcomp/?F=Y</a></p>
-<h3>Каталог</h3>
+<h3><?= Loc::getMessage("SIMP_COMP_TEMPLATE_TITLE") ?></h3>
 <ul>
-    <?php foreach ($arResult["ITEMS"] as $classifier):?>
-        <li><b><?=$classifier["name"]?></b></li>
+    <?php foreach ($arResult["ITEMS"] as $classifier) : ?>
+        <li><b><?= $classifier["name"] ?></b></li>
         <ul>
-            <?php foreach ($classifier["products"] as $product):?>
+            <?php foreach ($classifier["products"] as $product) : ?>
                 <?php
                 $id = "{$classifier["name"]}-{$product['ID']}";
                 $this->AddEditAction($id, $product['EDIT_LINK'], CIBlock::GetArrayByID($product["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($id, $product['DELETE_LINK'], CIBlock::GetArrayByID($product["IBLOCK_ID"], "ELEMENT_DELETE"), ["CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')]);
                 ?>
-                <li id="<?=$this->GetEditAreaId($id);?>">
-                    <?=$product["NAME"]?> -
-                    <?=$product["PROPERTY_PRICE_VALUE"]?> -
-                    <?=$product["PROPERTY_MATERIAL_VALUE"]?> -
-                    <?=$product["PROPERTY_ARTNUMBER_VALUE"]?>
-                    <span><?=$product['DETAIL_PAGE_URL_CUSTOM']?></span>
+                <li id="<?= $this->GetEditAreaId($id); ?>">
+                    <?= $product["NAME"] ?> -
+                    <?= $product["PROPERTY_PRICE_VALUE"] ?> -
+                    <?= $product["PROPERTY_MATERIAL_VALUE"] ?> -
+                    <?= $product["PROPERTY_ARTNUMBER_VALUE"] ?>
+                    <span><?= $product['DETAIL_PAGE_URL_CUSTOM'] ?></span>
                 </li>
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </ul>
-    <?php endforeach;?>
+    <?php endforeach; ?>
 </ul>
 <div>
-    <?=$arResult["NAV_STRING"]?>
+    <?= $arResult["NAV_STRING"] ?>
 </div>

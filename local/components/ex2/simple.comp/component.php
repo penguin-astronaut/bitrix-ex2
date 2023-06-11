@@ -34,7 +34,10 @@ $arNavParams = [
 ];
 $arNavigation = CDBResult::GetNavParams($arParams["CLASSIFIER_PAGE_COUNT"]);
 
-if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavigation])) {
+if (
+    CModule::IncludeModule("iblock") &&
+    ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavigation]))
+) {
     //классификаторы
     $arClassifiersFilter = ["IBLOCK_ID" => $arParams["IBLOCK_ID_PRODUCTS_CLASSIFIER"], "CHECK_PERMISSIONS" => "Y"];
     $arClassifiersFields = ["ID", "NAME"];
@@ -61,7 +64,7 @@ if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavig
             [
                 "LOGIC" => "OR",
                 ["<=PROPERTY_PRICE" => 1700, "=PROPERTY_MATERIAL" => "Дерево, ткань"],
-                ["<PROPERTY_RADIUS" => 1500, "=PROPERTY_MATERIAL" => "Металл, пластик"],
+                ["<PROPERTY_PRICE" => 1500, "=PROPERTY_MATERIAL" => "Металл, пластик"],
             ],
         ];
         $this->abortResultCache();
@@ -74,7 +77,7 @@ if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavig
 
     $addedIds = [];
     // формирование результируещего массива
-    while($product = $productsQ->GetNext()) {
+    while ($product = $productsQ->GetNext()) {
         $product["DETAIL_PAGE_URL_CUSTOM"] = str_replace(
             ["#SECTION_ID#", "#ELEMENT_CODE#"],
             [$product["IBLOCK_SECTION_ID"], $product["CODE"]],
@@ -82,7 +85,7 @@ if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavig
         );
         $arButtons = CIBlock::GetPanelButtons(
             $product["IBLOCK_ID"],
-            $product ["ID"],
+            $product["ID"],
             0,
             ["SECTION_BUTTONS" => false, "SESSID" => false]
         );
@@ -94,6 +97,16 @@ if ($isUseFilter || $this->startResultCache(false, [$USER->GetGroups(), $arNavig
     $arResult["ITEMS"] = $catalog;
 
     $this->includeComponentTemplate();
+}
+
+if (
+    $arParams["IBLOCK_ID_PRODUCTS"] > 0
+    && $USER->IsAuthorized()
+    && $APPLICATION->GetShowIncludeAreas()
+    && CModule::IncludeModule("iblock")
+) {
+    $arButtons = CIBlock::GetPanelButtons($arParams["IBLOCK_ID_PRODUCTS"], 0, 0, array("SECTION_BUTTONS" => false));
+    $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
 }
 
 $APPLICATION->SetTitle("Разделов: {$arResult["TOTAL_CNT"]}");

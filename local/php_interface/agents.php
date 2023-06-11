@@ -2,31 +2,48 @@
 
 function CheckUserCount(): ?string
 {
-    $lastTimeStart = COption::GetOptionInt("main", "countUsersRegisterForPeriod_time");
+    $lastTimeStart = COption::GetOptionString("main", "countUsersRegisterForPeriod_time");
+    $now = new DateTime();
+
+    $nowFormatted = $now->format('d.m.Y H:i:s');
+
     if (!$lastTimeStart) {
-        COption::SetOptionInt("main", "countUsersRegisterForPeriod_time", time());
-        return "CheckUserCount();";
+        COption::SetOptionString("main", "countUsersRegisterForPeriod_time", $nowFormatted);
+        return __METHOD__ . "();";
     }
 
-    $newUsers = CUser::GetList(false, false, ["DATE_REGISTER_1" => date("d.m.Y", $lastTimeStart)]);
-    $newUsersCount = $newUsers ? $newUsers->SelectedRowsCount() : 0;
+    $arUsers = Bitrix\Main\UserTable::getList([
+        'select' => [
+            'ID', 'DATE_REGISTER'
+        ],
+        'filter' => [
+            '>DATE_REGISTER' => $lastTimeStart,
+        ],
+        'count_total' => true,
+    ]);
+
+    $newUsersCount = $arUsers->getCount();
 
     $admins = CUser::GetList(false, false, ["GROUPS_ID" => [1]]);
     $adminsEmails = [];
     while ($admin = $admins->Fetch()) {
         $adminsEmails[] = $admin["EMAIL"];
     }
-    $period = floor((time() - $lastTimeStart)/(60*60*24));
+
+    DateTime::createFromFormat('d.m.Y H:i:s', $lastTimeStart);
+    $period = date_diff(DateTime::createFromFormat('d.m.Y H:i:s', $lastTimeStart), $now);
 
     CEvent::Send(
         "NEW_USERS_REGISTER_PERIOD",
         "s1",
         [
             "COUNT" => $newUsersCount,
-            "PERIOD" => $period,
+            "PERIOD" => $period->d,
             "EMAIL_TO" => implode(",", $adminsEmails)
         ]
     );
-    COption::SetOptionInt("main", "countUsersRegisterForPeriod_time", time());
-    return "CheckUserCount();";
+
+    COption::SetOptionString("main", "countUsersRegisterForPeriod_time", $nowFormatted);
+
+    return __METHOD__ . "();";
 }

@@ -8,9 +8,12 @@ class MyClass
 {
     public static function onBeforeElementUpdate(&$arParams)
     {
-        if ($arParams["IBLOCK_ID"] === 2 && $arParams["ACTIVE"] === "N") {
+        $cancelDeactivateProductCount = 2;
+        $productsBlockID = 2;
+
+        if ($arParams["IBLOCK_ID"] === $productsBlockID && $arParams["ACTIVE"] === "N") {
             $elem = CIBlockElement::GetByID($arParams["ID"])->Fetch();
-            if ($elem["ACTIVE"] === "Y" && (int)$elem["SHOW_COUNTER"] > 2) {
+            if ($elem["ACTIVE"] === "Y" && (int)$elem["SHOW_COUNTER"] > $cancelDeactivateProductCount) {
                 global $APPLICATION;
                 $APPLICATION->throwException(
                     "Товар невозможно деактивировать, у него {$elem["SHOW_COUNTER"]} просмотров"
@@ -32,19 +35,13 @@ class MyClass
     {
         global $APPLICATION;
 
-        if (constant('ERROR_404') === "Y") {
-            $APPLICATION->RestartBuffer();
-            CHTTP::SetStatus("404 Not Found");
-            include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/header.php");
-            include($_SERVER["DOCUMENT_ROOT"] . '/404.php');
-            include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/footer.php");
+        if (defined('ERROR_404') && constant('ERROR_404') === "Y") {
             CEventLog::Add(array(
                 "SEVERITY" => "INFO",
                 "AUDIT_TYPE_ID" => "ERROR_404",
                 "MODULE_ID" => "main",
-                "DESCRIPTION" => "url страницы",
+                "DESCRIPTION" => $APPLICATION->GetCurPage(),
             ));
-            exit;
         }
 
         if (CModule::IncludeModule("iblock")) {
