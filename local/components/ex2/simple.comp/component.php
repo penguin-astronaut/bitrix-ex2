@@ -76,6 +76,7 @@ if (
         CIBlockElement::GetList($arProductsOrder, $arProductsFilter, false, false, $arProductsFields);
 
     $addedIds = [];
+    $arResult["ADD_LINK"] = "";
     // формирование результируещего массива
     while ($product = $productsQ->GetNext()) {
         $product["DETAIL_PAGE_URL_CUSTOM"] = str_replace(
@@ -92,21 +93,16 @@ if (
         $product["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
         $product["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
         $catalog[$product["PROPERTY_COMPANIES_VALUE"]]["products"][] = $product;
+
+        if (empty($arResult["ADD_LINK"])) {
+            $arResult["ADD_LINK"] = $arButtons["edit"]["add_element"]["ACTION_URL"];
+        }
     }
+
     $arResult["TOTAL_CNT"] = count($catalog);
     $arResult["ITEMS"] = $catalog;
 
     $this->includeComponentTemplate();
-}
-
-if (
-    $arParams["IBLOCK_ID_PRODUCTS"] > 0
-    && $USER->IsAuthorized()
-    && $APPLICATION->GetShowIncludeAreas()
-    && CModule::IncludeModule("iblock")
-) {
-    $arButtons = CIBlock::GetPanelButtons($arParams["IBLOCK_ID_PRODUCTS"], 0, 0, array("SECTION_BUTTONS" => false));
-    $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
 }
 
 $APPLICATION->SetTitle("Разделов: {$arResult["TOTAL_CNT"]}");

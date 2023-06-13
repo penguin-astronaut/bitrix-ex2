@@ -8,12 +8,11 @@ class MyClass
 {
     public static function onBeforeElementUpdate(&$arParams)
     {
-        $cancelDeactivateProductCount = 2;
-        $productsBlockID = 2;
+        require __DIR__ . '/constants.php';
 
-        if ($arParams["IBLOCK_ID"] === $productsBlockID && $arParams["ACTIVE"] === "N") {
+        if ($arParams["IBLOCK_ID"] === PRODUCT_IBLOCK_ID && $arParams["ACTIVE"] === "N") {
             $elem = CIBlockElement::GetByID($arParams["ID"])->Fetch();
-            if ($elem["ACTIVE"] === "Y" && (int)$elem["SHOW_COUNTER"] > $cancelDeactivateProductCount) {
+            if ($elem["ACTIVE"] === "Y" && (int)$elem["SHOW_COUNTER"] > CANCEL_DEACTIVATE_PRODUCT_COUNT) {
                 global $APPLICATION;
                 $APPLICATION->throwException(
                     "Товар невозможно деактивировать, у него {$elem["SHOW_COUNTER"]} просмотров"

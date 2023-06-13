@@ -1,6 +1,7 @@
 <?php
 
 /** @var array $arResult */
+/** @var array $arParams */
 
 use Bitrix\Main\Localization\Loc;
 
@@ -8,15 +9,16 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-
-
 ?>
 ---
 <p><?= Loc::getMessage("SIMP_COMP_TEMPLATE_TIMESTAMP") ?> <?= time() ?></p>
 ---
 <p><a href="/ex2/simpcomp/?F=Y">/ex2/simpcomp/?F=Y</a></p>
 <h3><?= Loc::getMessage("SIMP_COMP_TEMPLATE_TITLE") ?></h3>
-<ul>
+<?php
+$this->AddEditAction("ELEMENT_ADD", $arResult['ADD_LINK'], CIBlock::GetArrayByID($arParams["IBLOCK_ID_PRODUCTS"], "ELEMENT_ADD"));
+?>
+<ul id="<?= $this->GetEditAreaId("ELEMENT_ADD"); ?>">
     <?php foreach ($arResult["ITEMS"] as $classifier) : ?>
         <li><b><?= $classifier["name"] ?></b></li>
         <ul>
