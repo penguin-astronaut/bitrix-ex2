@@ -1,0 +1,4 @@
+<?php
+
+define('CANCEL_DEACTIVATE_PRODUCT_COUNT', 2);
+define('PRODUCT_IBLOCK_ID', 2);

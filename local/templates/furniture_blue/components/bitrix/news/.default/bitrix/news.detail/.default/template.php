@@ -1,4 +1,8 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
+<?php
+CJSCore::Init(array('ajax'));
+$request = \Bitrix\Main\Context::getCurrent()->getRequest();
+?>
 <div class="news-detail">
 	<?if($arParams["DISPLAY_PICTURE"]!="N" && is_array($arResult["DETAIL_PICTURE"])):?>
 		<img class="detail_picture" src="<?=$arResult["DETAIL_PICTURE"]["SRC"]?>" width="<?=$arResult["DETAIL_PICTURE"]["WIDTH"]?>" height="<?=$arResult["DETAIL_PICTURE"]["HEIGHT"]?>" alt="<?=$arResult["NAME"]?>"  title="<?=$arResult["NAME"]?>" />
@@ -8,6 +12,8 @@
 	<?endif;?>
 	<?if($arParams["DISPLAY_NAME"]!="N" && $arResult["NAME"]):?>
 		<h3><?=$arResult["NAME"]?></h3>
+		<a id="send-report" href="<?=$APPLICATION->getCurPage() . "?isReport=Y"?> ">Пожаловаться на новость</a>
+		<p id="report-msg" style="display: none;"></p>
 	<?endif;?>
 	<div class="news-detail">
 	<?if($arParams["DISPLAY_PREVIEW_TEXT"]!="N" && $arResult["FIELDS"]["PREVIEW_TEXT"]):?>
@@ -40,3 +46,27 @@
 	<?endforeach;?>
 	</div>
 </div>
+<?php if ($arParams["SET_PROP_REPORT_AJAX"] === "Y"):?>
+<script>
+	BX.ready(function () {
+		const elem = BX('send-report');
+		elem.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			BX.ajax.post(
+				'<?=$APPLICATION->getCurPage();?>',
+				{
+					isReport: 'Y',
+					isAjax: 'Y'
+				},
+				function (result) {
+					const elem = BX('report-msg');
+					elem.style.color = result === 'Ошибка' ? 'red' : 'green';
+					elem.innerText = result;
+					BX.show(elem);
+				}
+			)
+		})
+	})
+</script>
+<?php endif;?>
